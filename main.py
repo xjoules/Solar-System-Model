@@ -18,22 +18,26 @@ class One(pg.sprite.Group):
         for i in INPUT["Stars"]:
             i = INPUT["Stars"][i]
             color = (i["Color"]["r"], i["Color"]["g"], i["Color"]["b"])
-            star(self,
-                i["Name"],
-                i["Radius"],
-                i["Position"]["x"],
-                i["Position"]["y"],
-                color
-                )
+            star(self, i["Name"], i["Size"], i["Position"]["x"], i["Position"]["y"], color)
+        
+        for i in INPUT["Planets"]:
+            i = INPUT["Planets"][i]
+            color = (i["Color"]["r"], i["Color"]["g"], i["Color"]["b"])
+            planet(self, i["Name"], i["Orbits"], i["Size"], i["Distance"], color)
+
+    def get_body_by_name(self, name):
+        for sprite in self:
+            if sprite.name == name:
+                return sprite
 
 
 class star(pg.sprite.Sprite):
-    def __init__(self, sprite_group, name, radius, x, y, color):
+    def __init__(self, sprite_group, name, size, x, y, color):
         super().__init__(sprite_group)
         self.sprite_group = sprite_group
 
         self.name = name
-        self.radius = radius
+        self.size = size
         self.x = x
         self.y = y
         self.color = color
@@ -45,12 +49,33 @@ class star(pg.sprite.Sprite):
 
     def draw(self):
         pos = (self.x, self.y)
-        pg.draw.circle(self.surface, self.color, pos, self.radius)
-        #print(self.name, self.radius, pos, self.color)
+        pg.draw.circle(self.surface, self.color, pos, self.size)
+
 
 class planet(star):
-    def __init__(self, sprite_group, name, star_name, radius, x, y, color):
-        super().__init__(sprite_group, name)
+    def __init__(self, sprite_group, name, parent_name, size, distance, color):
+        super().__init__(sprite_group, name, size, 0, 0, color)
+        self.sprite_group = sprite_group
+        self.parent = sprite_group.get_body_by_name(parent_name)
+        self.distance = distance
+
+        self.name = name
+        self.size = size
+        self.x = self.parent.x + self.distance
+        self.y = self.parent.y + self.distance
+        
+        self.color = color
+
+
+
+
+
+
+
+
+
+
+
 
 def run():
     sprites = One()

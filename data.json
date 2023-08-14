@@ -2,7 +2,7 @@
     "Stars": {
         "Sun": {
             "Name": "Sun",
-            "Radius": 60,
+            "Size": 60,
             "Position": {
                 "x": 640,
                 "y": 360
@@ -11,6 +11,19 @@
                 "r": 255,
                 "g": 255,
                 "b": 0
+            }
+        }
+    },
+    "Planets": {
+        "Mercury": {
+            "Name": "Mercury",
+            "Orbits": "Sun",
+            "Size": 5,
+            "Distance": 100,
+            "Color": {
+                "r": 0,
+                "g": 128,
+                "b": 255
             }
         }
     }
