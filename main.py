@@ -1,5 +1,7 @@
 import pygame as pg
 import json
+from math import radians, cos, sin, pi
+from random import uniform, randrange
 pg.init()
 
 with open("data.json", "r") as file:
@@ -23,7 +25,7 @@ class One(pg.sprite.Group):
         for i in INPUT["Planets"]:
             i = INPUT["Planets"][i]
             color = (i["Color"]["r"], i["Color"]["g"], i["Color"]["b"])
-            planet(self, i["Name"], i["Orbits"], i["Size"], i["Distance"], color)
+            planet(self, i["Name"], i["Orbits"], i["Size"], i["Distance"], i["Velocity"], color)
 
     def get_body_by_name(self, name):
         for sprite in self:
@@ -53,28 +55,34 @@ class star(pg.sprite.Sprite):
 
 
 class planet(star):
-    def __init__(self, sprite_group, name, parent_name, size, distance, color):
+    def __init__(self, sprite_group, name, parent_name, size, distance, velocity, color):
         super().__init__(sprite_group, name, size, 0, 0, color)
-        self.sprite_group = sprite_group
         self.parent = sprite_group.get_body_by_name(parent_name)
         self.distance = distance
+        self.velocity = velocity
 
         self.name = name
         self.size = size
-        self.x = self.parent.x + self.distance
-        self.y = self.parent.y + self.distance
+        #self.x = self.parent.x + self.distance
+        #self.y = self.parent.y
         
         self.color = color
 
+        self.center_of_rotation_x = self.parent.x
+        self.center_of_rotation_y = self.parent.y
 
+        self.angle = radians(uniform(0, 360))
+        self.x = self.center_of_rotation_x + self.distance * cos(self.angle)
+        self.y = self.center_of_rotation_y - self.distance * sin(self.angle)
 
-
-
-
-
-
-
-
+    def update(self):
+        self.center_of_rotation_x, self.center_of_rotation_y = self.parent.x, self.parent.y
+        self.x = (self.center_of_rotation_x + self.distance * cos(self.angle))
+        self.y = (self.center_of_rotation_y - self.distance * sin(self.angle))
+        self.draw()
+        self.angle = self.angle + self.velocity
+        self.x = self.x + self.distance * self.velocity * cos(self.angle + pi / 2)
+        self.y = self.y - self.distance * self.velocity * sin(self.angle + pi / 2)
 
 
 def run():

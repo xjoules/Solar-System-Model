@@ -19,7 +19,8 @@
             "Name": "Mercury",
             "Orbits": "Sun",
             "Size": 5,
-            "Distance": 100,
+            "Distance": 150,
+            "Velocity": 0.0312,
             "Color": {
                 "r": 0,
                 "g": 128,
